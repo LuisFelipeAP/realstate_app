@@ -6,11 +6,26 @@ import Image from 'next/image'
 
 import { filterData, getFilterValues } from '../../utils/filterData'
 
-const SearchFilters = () => {
+export default function SearchFilters() {
     const [filters] = useState(filterData);
+    const router = useRouter();
 
     const searchProperties = (filterValues) => {
-        
+        const path = router.pathname;
+        const { query } = router;
+
+        const values = getFilterValues(filterValues);
+
+        values.map((item) => {
+            if(item.value && filterValues?.[item.name]) {
+                query[item.name] = item.value
+            }
+        })
+
+        router.push({ 
+            pathname: path, 
+            query: query,
+        })
     }
 
     return (
@@ -50,5 +65,3 @@ const SearchFilters = () => {
         </Flex>
     )
 }
-
-export default SearchFilters;
